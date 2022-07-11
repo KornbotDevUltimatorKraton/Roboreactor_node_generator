@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Roboreactor generater</title>
+</head>
+
+<body>
+    <script src="static/drawflow/drawflow.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"
+        integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="static/src/drawflow.css" />
+    <link rel="stylesheet" type="text/css" href="static/src/main.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
+        integrity="sha256-h20CPZ0QyXlBuAw7A+KluUYx/3pK+c7lYEpqLTlxjYQ=" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+
+    <div class="menu">
+        <ul>
+            <li onclick="editor.changeModule('Home'); changeModule(event);" class="selected">Home</li>
+           <!-- <li onclick="editor.changeModule('Other'); changeModule(event);">Other Module</li>-->
+        </ul>
+    </div>
+    <div id="drawflow" ondrop="drop(event)" ondragover="allowDrop(event)">
+
+        <div class="btn-export" onclick="Swal.fire({ title: 'Export',
+          html: '<pre><code>'+JSON.stringify(editor.export(), null,4)+'</code></pre>'
+          })">Export</div>
+        <div class="btn-clear" onclick="editor.clearModuleSelected()">Clear</div>
+        <div class="btn-lock">
+            <i id="lock" class="fas fa-lock" onclick="editor.editor_mode='fixed'; changeMode('lock');"></i>
+            <i id="unlock" class="fas fa-lock-open" onclick="editor.editor_mode='edit'; changeMode('unlock');"
+                style="display:none;"></i>
+        </div>
+
+        <div class="bar-zoom">
+            <i class="fas fa-search-minus" onclick="editor.zoom_out()"></i>
+            <i class="fas fa-search" onclick="editor.zoom_reset()"></i>
+            <i class="fas fa-search-plus" onclick="editor.zoom_in()"></i>
+        </div>
+
+    </div>
+
+    <scroll>
+        <section id="sidebar">
+           
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+            <ul class="treeview checklist">
+                <li>
+                    <input type="checkbox" name="tall" id="tall">
+                    <label for="tall">
+                        <i>&nbsp;</i>
+                        <i>Node components</i>
+                    </label>
+                    <!-- gen_import_node_html{ -->
+                    <ul>
+                        <li>
+                            <input type="checkbox" name="tall-1" id="tall-1">
+                            <label for="tall-1">
+                                <i>&nbsp;</i>
+                                <i>socket communication</i>
+                            </label>
+
+                            <ul>
+                                <li>
+                                    <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                        <label style="background-color: #00BFFF;">
+                                            <i>&nbsp;</i>
+                                            <i>Create_pub_node</i>
+                                        </label>
+                                    </div>
+                                    <div draggable="true" ondragstart="drag(event)" data-node="sub_node">
+                                        <label style="background-color: #00BFFF;">
+                                            <i>&nbsp;</i>
+                                            <i>Create_sub_node</i>
+                                        </label>
+                                   </div>
+                                   <div draggable="true" ondragstart="drag(event)" data-node="multiple">
+                                    <label style="background-color: #00BFFF;">
+                                        <i>&nbsp;</i>
+                                        <i>Create_multi_node</i>
+                                    </label>
+                               </div>
+                            </ul>
+
+                        </li>
+                        <li>
+                            <input type="checkbox" name="tall-2" id="tall-2">
+                            <label for="tall-2">
+                                <i>&nbsp;</i>
+                                <i>Vision system</i>
+                            </label>
+                            <ul>
+                                <li>
+                            <div draggable="true" ondragstart="drag(event)" data-node="Normal_camera">
+                                        <label style="background-color: #00BFFF;">
+                                            <i>&nbsp;</i>
+                                            <i>Camera input</i>
+                                        </label>
+                            </div>
+                            <div draggable="true" ondragstart="drag(event)" data-node="Face_recognition">
+                                <label style="background-color: #00BFFF;">
+                                    <i>&nbsp;</i>
+                                    <i>Face recognition</i>
+                                </label>
+                            </div>
+                            
+                            
+                            <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                <label style="background-color: #00BFFF;">
+                                    <i>&nbsp;</i>
+                                    <i>Body detection</i>
+                                </label>
+                           </div>
+                           <div draggable="true" ondragstart="drag(event)" data-node="template">
+                            <label style="background-color: #00BFFF;">
+                                <i>&nbsp;</i>
+                                <i>Object detection</i>
+                            </label>
+                            </div>
+                            <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                <label style="background-color: #00BFFF;">
+                                    <i>&nbsp;</i>
+                                    <i>Object recognition</i>
+                                </label>
+                           </div>
+                           <div draggable="true" ondragstart="drag(event)" data-node="template">
+                            <label style="background-color: #00BFFF;">
+                                <i>&nbsp;</i>
+                                <i>OCR image processing</i>
+                            </label>
+                           </div>
+                           <div draggable="true" ondragstart="drag(event)" data-node="template">
+                            <label style="background-color: #00BFFF;">
+                                <i>&nbsp;</i>
+                                <i>QR code detection</i>
+                            </label>
+                       </div>
+                       <div draggable="true" ondragstart="drag(event)" data-node="template">
+                        <label style="background-color: #00BFFF;">
+                            <i>&nbsp;</i>
+                            <i>Pose recognition</i>
+                        </label>
+                   </div>
+
+
+                        </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="tall-3" id="tall-3">
+                            <label for="tall-3">
+                                <i>&nbsp;</i>
+                                <i>Audio system</i>
+                            </label>
+                            <ul>
+                                <li>
+                                <div draggable="true" ondragstart="drag(event)" data-node="Speech_recognition">
+                                    <label style="background-color: #00BFFF;">
+                                        <i>&nbsp;</i>
+                                        <i>Speech recognition</i>
+                                    </label>
+                               </div>
+                               <div draggable="true" ondragstart="drag(event)" data-node="TTS">
+                                <label style="background-color: #00BFFF;">
+                                    <i>&nbsp;</i>
+                                    <i>Text to speech</i>
+                                </label>
+                              </div>
+                                
+                              </li>
+
+                            </ul>
+
+                        </li>
+                        <li>
+                            <input type="checkbox" name="tall-4" id="tall-4">
+                            <label for="tall-4">
+                                <i>&nbsp;</i>
+                                <i>Odometry system</i>
+                            </label>
+                            <ul>
+                                <li>
+                                <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                    <label style="background-color: #00BFFF;">
+                                        <i>&nbsp;</i>
+                                        <i>Direction and vector control</i>
+                                    </label>
+                               </div>
+                             </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <input type="checkbox" name="tall-5" id="tall-5">
+                            <label for="tall-5">
+                                <i>&nbsp;</i>
+                                <i>Navigation system</i>
+                            </label>
+                            <ul>
+                                <li>
+                                <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                    <label style="background-color: #00BFFF;">
+                                        <i>&nbsp;</i>
+                                        <i>GPS</i>
+                                    </label>
+                               </div>
+                               <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                    <label style="background-color: #00BFFF;">
+                                        <i>&nbsp;</i>
+                                        <i>Lidar</i>
+                                    </label>
+                               </div>
+                               <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                <label style="background-color: #00BFFF;">
+                                    <i>&nbsp;</i>
+                                    <i>Beacon</i>
+                                </label>
+                           </div>
+                           <div draggable="true" ondragstart="drag(event)" data-node="template">
+                            <label style="background-color: #00BFFF;">
+                                <i>&nbsp;</i>
+                                <i>Sonar mapping</i>
+                            </label>
+                       </div>
+                       <div draggable="true" ondragstart="drag(event)" data-node="template">
+                        <label style="background-color: #00BFFF;">
+                            <i>&nbsp;</i>
+                            <i>Sound navigation</i>
+                        </label>
+                   </div>
+                          </li>
+                            </ul>
+
+                        </li>
+                        <li>
+                            <input type="checkbox" name="tall-6" id="tall-6">
+                            <label for="tall-6">
+                                <i>&nbsp;</i>
+                                <i>Sensor Array system</i>
+                            </label>
+                            <ul>
+                              <li>
+                                <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                    <label style="background-color: #00BFFF;">
+                                        <i>&nbsp;</i>
+                                        <i>Optic sensor</i>
+                                    </label>
+                               </div>
+                               <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                <label style="background-color: #00BFFF;">
+                                    <i>&nbsp;</i>
+                                    <i>Force sensor</i>
+                                </label>
+                           </div>
+                           <div draggable="true" ondragstart="drag(event)" data-node="template">
+                            <label style="background-color: #00BFFF;">
+                                <i>&nbsp;</i>
+                                <i>Pressure sensor</i>
+                            </label>
+                       </div>
+                       
+
+                              </li>
+
+                            </ul>
+
+                        </li>
+                        <li>
+                            <input type="checkbox" name="tall-7" id="tall-7">
+                            <label for="tall-7">
+                                <i>&nbsp;</i>
+                                <i>NLP and language translation</i>
+                            </label>
+                             <ul>
+                                 <li>
+                                    <div draggable="true" ondragstart="drag(event)" data-node="NLP">
+                                        <label style="background-color: #00BFFF;">
+                                            <i>&nbsp;</i>
+                                            <i>NLP function</i>
+                                        </label>
+                                   </div>
+                                   <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                    <label style="background-color: #00BFFF;">
+                                        <i>&nbsp;</i>
+                                        <i>Language translation</i>
+                                    </label>
+                               </div>
+                                 </li>
+
+                             </ul>
+
+                        </li>
+
+                        <li>
+                            <input type="checkbox" name="tall-8" id="tall-8">
+                            <label for="tall-8">
+                                <i>&nbsp;</i>
+                                <i>Motion system</i>
+                            </label>
+                            <ul>
+                                <li>
+                                    <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                        <label style="background-color: #00BFFF;">
+                                            <i>&nbsp;</i>
+                                            <i>DC motor control</i>
+                                        </label>
+                                   </div>
+                                   <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                    <label style="background-color: #00BFFF;">
+                                        <i>&nbsp;</i>
+                                        <i>Stepper motor</i>
+                                    </label>
+                               </div>
+                               <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                <label style="background-color: #00BFFF;">
+                                    <i>&nbsp;</i>
+                                    <i>BLDC motor</i>
+                                </label>
+                           </div>
+                           <li>
+                            <input type="checkbox" name="tall-9" id="tall-9">
+                            <label for="tall-9">
+                                <i>&nbsp;</i>
+                                <i>Servo motor</i>
+                            </label>
+                             <ul>
+                                <li>
+                                    <li>
+                                        <input type="checkbox" name="tall-10" id="tall-10">
+                                        <label for="tall-10">
+                                            <i>&nbsp;</i>
+                                            <i>Angular feedback sensor</i>
+                                        </label>
+
+                                        <ul>
+                                            <li>
+                                                <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                                    <label style="background-color: #00BFFF;">
+                                                        <i>&nbsp;</i>
+                                                        <i>Potentiometer sensor</i>
+                                                    </label>
+                                                </div>
+                                                <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                                    <label style="background-color: #00BFFF;">
+                                                        <i>&nbsp;</i>
+                                                        <i>Magnetic encoder</i>
+                                                    </label>
+                                                </div>
+                                               
+                                            </li>
+                                        </ul>
+                                  
+
+                                   </li>
+                                   <li>
+                                    <input type="checkbox" name="tall-11" id="tall-11">
+                                    <label for="tall-11">
+                                        <i>&nbsp;</i>
+                                        <i>Linear feedback sensor</i>
+                                    </label>
+
+                                    <ul>
+                                        <li>
+                                            <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                                <label style="background-color: #00BFFF;">
+                                                    <i>&nbsp;</i>
+                                                    <i>Linear potentiometer</i>
+                                                </label>
+                                            </div>
+                                            <div draggable="true" ondragstart="drag(event)" data-node="template">
+                                                <label style="background-color: #00BFFF;">
+                                                    <i>&nbsp;</i>
+                                                    <i>Linear capacitive</i>
+                                                </label>
+                                            </div>
+                                        </li>
+                                    </ul>
+                              
+
+                               </li>
+
+
+
+
+
+                                </li>
+
+                             </ul>
+                              
+                           </li>
+                          </li>
+                        </ul>
+
+                        </li>
+
+                      
+
+
+                </li>
+            </ul>
+            <!-- }gen_import_node_html -->
+            </ul>
+            </li>
+            </div>
+          
+        </div>
+        </section>
+    </scroll>
+
+    <script>
+
+        var id = document.getElementById("drawflow");
+        const editor = new Drawflow(id);
+        editor.reroute = true;
+        editor.reroute_fix_curvature = true;
+        editor.force_first_input = false;
+
+        /*
+          editor.createCurvature = function(start_pos_x, start_pos_y, end_pos_x, end_pos_y, curvature_value, type) {
+            var center_x = ((end_pos_x - start_pos_x)/2)+start_pos_x;
+            return ' M ' + start_pos_x + ' ' + start_pos_y + ' L '+ center_x +' ' +  start_pos_y  + ' L ' + center_x + ' ' +  end_pos_y  + ' L ' + end_pos_x + ' ' + end_pos_y;
+          }*/
+
+        //const dataToImport = { "drawflow": { "Home": { "data": { "1": { "id": 1, "name": "welcome", "data": {}, "class": "welcome", "html": "\n    <div>\n      <div class=\"title-box\">👏 Welcome!!</div>\n      <div class=\"box\">\n        <p>Simple flow library <b>demo</b>\n        <a href=\"https://github.com/jerosoler/Drawflow\" target=\"_blank\">Drawflow</a> by <b>Jero Soler</b></p><br>\n\n        <p>Multiple input / outputs<br>\n           Data sync nodes<br>\n           Import / export<br>\n           Modules support<br>\n           Simple use<br>\n           Type: Fixed or Edit<br>\n           Events: view console<br>\n           Pure Javascript<br>\n        </p>\n        <br>\n        <p><b><u>Shortkeys:</u></b></p>\n        <p>🎹 <b>Delete</b> for remove selected<br>\n        💠 Mouse Left Click == Move<br>\n        ❌ Mouse Right == Delete Option<br>\n        🔍 Ctrl + Wheel == Zoom<br>\n        📱 Mobile support<br>\n        ...</p>\n      </div>\n    </div>\n    ", "typenode": false, "inputs": {}, "outputs": {}, "pos_x": 50, "pos_y": 50 }, "2": { "id": 2, "name": "slack", "data": {}, "class": "slack", "html": "\n          <div>\n            <div class=\"title-box\"><i class=\"fab fa-slack\"></i> Slack chat message</div>\n          </div>\n          ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "7", "input": "output_1" }] } }, "outputs": {}, "pos_x": 1028, "pos_y": 87 }, "3": { "id": 3, "name": "telegram", "data": { "channel": "channel_2" }, "class": "telegram", "html": "\n          <div>\n            <div class=\"title-box\"><i class=\"fab fa-telegram-plane\"></i> Telegram bot</div>\n            <div class=\"box\">\n              <p>Send to telegram</p>\n              <p>select channel</p>\n              <select df-channel>\n                <option value=\"channel_1\">Channel 1</option>\n                <option value=\"channel_2\">Channel 2</option>\n                <option value=\"channel_3\">Channel 3</option>\n                <option value=\"channel_4\">Channel 4</option>\n              </select>\n            </div>\n          </div>\n          ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "7", "input": "output_1" }] } }, "outputs": {}, "pos_x": 1032, "pos_y": 184 }, "4": { "id": 4, "name": "email", "data": {}, "class": "email", "html": "\n            <div>\n              <div class=\"title-box\"><i class=\"fas fa-at\"></i> Send Email </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "5", "input": "output_1" }] } }, "outputs": {}, "pos_x": 1033, "pos_y": 439 }, "5": { "id": 5, "name": "template", "data": { "template": "Write your template" }, "class": "template", "html": "\n            <div>\n              <div class=\"title-box\"><i class=\"fas fa-code\"></i> Template</div>\n              <div class=\"box\">\n                Ger Vars\n                <textarea df-template></textarea>\n                Output template with vars\n              </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "6", "input": "output_1" }] } }, "outputs": { "output_1": { "connections": [{ "node": "4", "output": "input_1" }, { "node": "11", "output": "input_1" }] } }, "pos_x": 607, "pos_y": 304 }, "6": { "id": 6, "name": "github", "data": { "name": "https://github.com/jerosoler/Drawflow" }, "class": "github", "html": "\n          <div>\n            <div class=\"title-box\"><i class=\"fab fa-github \"></i> Github Stars</div>\n            <div class=\"box\">\n              <p>Enter repository url</p>\n            <input type=\"text\" df-name>\n            </div>\n          </div>\n          ", "typenode": false, "inputs": {}, "outputs": { "output_1": { "connections": [{ "node": "5", "output": "input_1" }] } }, "pos_x": 341, "pos_y": 191 }, "7": { "id": 7, "name": "facebook", "data": {}, "class": "facebook", "html": "\n        <div>\n          <div class=\"title-box\"><i class=\"fab fa-facebook\"></i> Facebook Message</div>\n        </div>\n        ", "typenode": false, "inputs": {}, "outputs": { "output_1": { "connections": [{ "node": "2", "output": "input_1" }, { "node": "3", "output": "input_1" }, { "node": "11", "output": "input_1" }] } }, "pos_x": 347, "pos_y": 87 }, "11": { "id": 11, "name": "log", "data": {}, "class": "log", "html": "\n            <div>\n              <div class=\"title-box\"><i class=\"fas fa-file-signature\"></i> Save log file </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "5", "input": "output_1" }, { "node": "7", "input": "output_1" }] } }, "outputs": {}, "pos_x": 1031, "pos_y": 363 } } }, "Other": { "data": { "8": { "id": 8, "name": "personalized", "data": {}, "class": "personalized", "html": "\n            <div>\n              Personalized\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "12", "input": "output_1" }, { "node": "12", "input": "output_2" }, { "node": "12", "input": "output_3" }, { "node": "12", "input": "output_4" }] } }, "outputs": { "output_1": { "connections": [{ "node": "9", "output": "input_1" }] } }, "pos_x": 764, "pos_y": 227 }, "9": { "id": 9, "name": "dbclick", "data": { "name": "Hello World!!" }, "class": "dbclick", "html": "\n            <div>\n            <div class=\"title-box\"><i class=\"fas fa-mouse\"></i> Db Click</div>\n              <div class=\"box dbclickbox\" ondblclick=\"showpopup(event)\">\n                Db Click here\n                <div class=\"modal\" style=\"display:none\">\n                  <div class=\"modal-content\">\n                    <span class=\"close\" onclick=\"closemodal(event)\">&times;</span>\n                    Change your variable {name} !\n                    <input type=\"text\" df-name>\n                  </div>\n\n                </div>\n              </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [{ "node": "8", "input": "output_1" }] } }, "outputs": { "output_1": { "connections": [{ "node": "12", "output": "input_2" }] } }, "pos_x": 209, "pos_y": 38 }, "12": { "id": 12, "name": "multiple", "data": {}, "class": "multiple", "html": "\n            <div>\n              <div class=\"box\">\n                Multiple!\n              </div>\n            </div>\n            ", "typenode": false, "inputs": { "input_1": { "connections": [] }, "input_2": { "connections": [{ "node": "9", "input": "output_1" }] }, "input_3": { "connections": [] } }, "outputs": { "output_1": { "connections": [{ "node": "8", "output": "input_1" }] }, "output_2": { "connections": [{ "node": "8", "output": "input_1" }] }, "output_3": { "connections": [{ "node": "8", "output": "input_1" }] }, "output_4": { "connections": [{ "node": "8", "output": "input_1" }] } }, "pos_x": 179, "pos_y": 272 } } } } }
+        const dataToImport = { "drawflow": { "Home": { "data": {} } } }
+        editor.start();
+        editor.import(dataToImport);
+
+        //editor.addNode(name, "typenode": false,  inputs, outputs, posx, posy, class, data, html);
+        /*editor.addNode('welcome', 0, 0, 50, 50, 'welcome', {}, welcome );
+        editor.addModule('Other');
+        */
+
+        // Events!
+        editor.on('nodeCreated', function (id) {
+            console.log("Node created " + id);
+        })
+
+        editor.on('nodeRemoved', function (id) {
+            console.log("Node removed " + id);
+        })
+
+        editor.on('nodeSelected', function (id) {
+            console.log("Node selected " + id);
+        })
+
+        editor.on('moduleCreated', function (name) {
+            console.log("Module Created " + name);
+        })
+
+        editor.on('moduleChanged', function (name) {
+            console.log("Module Changed " + name);
+        })
+
+        editor.on('connectionCreated', function (connection) {
+            console.log('Connection created');
+            console.log(connection);
+        })
+
+        editor.on('connectionRemoved', function (connection) {
+            console.log('Connection removed');
+            console.log(connection);
+        })
+        /*
+            editor.on('mouseMove', function(position) {
+              console.log('Position mouse x:' + position.x + ' y:'+ position.y);
+            })
+        */
+        editor.on('nodeMoved', function (id) {
+            console.log("Node moved " + id);
+        })
+
+        editor.on('zoom', function (zoom) {
+            console.log('Zoom level ' + zoom);
+        })
+
+        editor.on('translate', function (position) {
+            console.log('Translate x:' + position.x + ' y:' + position.y);
+        })
+
+        editor.on('addReroute', function (id) {
+            console.log("Reroute added " + id);
+        })
+
+        editor.on('removeReroute', function (id) {
+            console.log("Reroute removed " + id);
+        })
+        /* DRAG EVENT */
+
+        /* Mouse and Touch Actions */
+
+        var elements = document.getElementsByClassName('drag-drawflow');
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].addEventListener('touchend', drop, false);
+            elements[i].addEventListener('touchmove', positionMobile, false);
+            elements[i].addEventListener('touchstart', drag, false);
+        }
+
+        var mobile_item_selec = '';
+        var mobile_last_move = null;
+        function positionMobile(ev) {
+            mobile_last_move = ev;
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            if (ev.type === "touchstart") {
+                mobile_item_selec = ev.target.closest(".drag-drawflow").getAttribute('data-node');
+            } else {
+                ev.dataTransfer.setData("node", ev.target.getAttribute('data-node'));
+            }
+        }
+
+        function drop(ev) {
+            if (ev.type === "touchend") {
+                var parentdrawflow = document.elementFromPoint(mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY).closest("#drawflow");
+                if (parentdrawflow != null) {
+                    addNodeToDrawFlow(mobile_item_selec, mobile_last_move.touches[0].clientX, mobile_last_move.touches[0].clientY);
+                }
+                mobile_item_selec = '';
+            } else {
+                ev.preventDefault();
+                var data = ev.dataTransfer.getData("node");
+                addNodeToDrawFlow(data, ev.clientX, ev.clientY);
+            }
+
+        }
+
+        function addNodeToDrawFlow(name, pos_x, pos_y) {
+
+            if (editor.editor_mode === 'fixed') {
+                return false;
+            }
+            pos_x = pos_x * (editor.precanvas.clientWidth / (editor.precanvas.clientWidth * editor.zoom)) - (editor.precanvas.getBoundingClientRect().x * (editor.precanvas.clientWidth / (editor.precanvas.clientWidth * editor.zoom)));
+            pos_y = pos_y * (editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)) - (editor.precanvas.getBoundingClientRect().y * (editor.precanvas.clientHeight / (editor.precanvas.clientHeight * editor.zoom)));
+
+
+            switch (name) {
+                case 'facebook':
+                    var facebook = `
+        <div>
+          <div class="title-box"><i class="fab fa-facebook"></i> Raw_camera_pub </div>
+        </div>
+        `;
+                    editor.addNode('facebook', 0, 1, pos_x, pos_y, 'facebook', {}, facebook);
+                    break;
+        
+                    case 'Normal_camera':
+                    var Normal_camera = `
+        <div>
+          <div class="title-box"><i class="fab fa-facebook"></i> Camera input </div>
+          <div class="box">
+          <p>ip_address</p>
+          <input class="center" type="text" id="domdata" > 
+          <p>Port</p>
+          <input class="center" type="text" id="domdata" > 
+        
+      <button type="button"  onclick="getValueInput()"> 
+      submit
+      </button> 
+      </div>
+        </div>
+        `;
+      
+                    editor.addNode('Normal_camera', 0, 1, pos_x, pos_y, 'Normal_camera', {}, Normal_camera);
+                    break;            
+
+
+
+
+                    case 'Face_recognition':
+                    var Face_recognition = `
+        <div>
+          <div class="title-box"><i class="fab fa-facebook"></i> Face_recognition_sub </div>
+           <div class="box">
+          <p>ip_address</p>
+          <input class="center" type="text" id="face_recog" > 
+          <p>Port</p>
+          <input class="center" type="text" id="face_recog" > 
+         </div>
+      <button type="button"  onclick="getValueInput()"> 
+      submit
+      </button> 
+        </div>
+        `;
+                    editor.addNode('Face_recognition', 1, 1, pos_x, pos_y, 'Face_recognition', {}, Face_recognition);
+                    break;
+
+
+                    case 'TTS':
+                    var TTS = `
+          <div>
+            <div class="title-box"><i class="fab fa-slack"></i> Text_to_speech</div>
+            <div class="box">
+              <p>Destination language</p>
+              <select id="language" onChange="update()">
+                <option value="channel_1">English</option>
+                <option value="channel_2">Thai</option>
+                <option value="channel_3">Chinese</option>
+                <option value="channel_4">Russian</option>
+              </select>
+           
+            </div>
+
+          </div>
+          `
+          
+
+                    editor.addNode('TTS', 1, 0, pos_x, pos_y, 'TTS', {}, TTS);
+                    break;
+
+
+          
+                    case 'NLP':
+                    var NLP = `
+          <div>
+            <div class="title-box"><i class="fab fa-slack"></i> NLP_node</div>
+            <div class="box">
+                <p>Destination language</p>
+              <select id="language" onChange="nlplang()">
+                <option value="channel_1">English</option>
+                <option value="channel_2">Thai</option>
+                <option value="channel_3">Chinese</option>
+                <option value="channel_4">Russian</option>
+              </select>
+            </div>
+
+          </div>
+          `
+                    editor.addNode('NLP', 1, 1, pos_x, pos_y, 'NLP', {}, NLP);
+                    break;
+
+
+
+                case 'slack':
+                    var slackchat = `
+          <div>
+            <div class="title-box"><i class="fab fa-slack"></i> Slack chat message</div>
+          </div>
+          `
+                    editor.addNode('slack', 1, 0, pos_x, pos_y, 'slack', {}, slackchat);
+                    break;
+                case 'github':
+                    var githubtemplate = `
+          <div>
+            <div class="title-box"><i class="fab fa-github "></i> Github Stars</div>
+            <div class="box">
+              <p>Enter repository url</p>
+            <input type="text" df-name>
+            </div>
+          </div>
+          `;
+                    editor.addNode('github', 0, 1, pos_x, pos_y, 'github', { "name": '' }, githubtemplate);
+                    break;
+                case 'telegram':
+                    var telegrambot = `
+          <div>
+            <div class="title-box"><i class="fab fa-telegram-plane"></i> Telegram bot</div>
+            <div class="box">
+              <p>Send to telegram</p>
+              <p>select channel</p>
+              <select df-channel>
+                <option value="channel_1">Channel 1</option>
+                <option value="channel_2">Channel 2</option>
+                <option value="channel_3">Channel 3</option>
+                <option value="channel_4">Channel 4</option>
+              </select>
+            </div>
+          </div>
+          `;
+                    editor.addNode('telegram', 1, 0, pos_x, pos_y, 'telegram', { "channel": 'channel_3' }, telegrambot);
+                    break;
+                case 'aws':
+                    var aws = `
+          <div>
+            <div class="title-box"><i class="fab fa-aws"></i> Aws Save </div>
+            <div class="box">
+              <p>Save in aws</p>
+              <input type="text" df-db-dbname placeholder="DB name"><br><br>
+              <input type="text" df-db-key placeholder="DB key">
+              <p>Output Log</p>
+            </div>
+          </div>
+          `;
+                    editor.addNode('aws', 1, 1, pos_x, pos_y, 'aws', { "db": { "dbname": '', "key": '' } }, aws);
+                    break;
+                case 'log':
+                    var log = `
+            <div>
+              <div class="title-box"><i class="fas fa-file-signature"></i> Save log file </div>
+            </div>
+            `;
+                    editor.addNode('log', 1, 0, pos_x, pos_y, 'log', {}, log);
+                    break;
+                case 'google':
+                    var google = `
+            <div>
+              <div class="title-box"><i class="fab fa-google-drive"></i> Google Drive save </div>
+            </div>
+            `;
+                    editor.addNode('google', 1, 0, pos_x, pos_y, 'google', {}, google);
+                    break;
+                case 'email':
+                    var email = `
+            <div>
+              <div class="title-box"><i class="fas fa-at"></i> Send Email </div>
+            </div>
+            `;
+                    editor.addNode('email', 1, 0, pos_x, pos_y, 'email', {}, email);
+                    break;
+
+                case 'template':
+                    var template = `
+            <div>
+              <div class="title-box"><i class="fas fa-code"></i>create_pub</div>
+              <div class="box">
+                Ger Vars
+                <textarea df-template></textarea>
+                Output template with vars
+              </div>
+            </div>
+            `;
+                    editor.addNode('template', 1, 1, pos_x, pos_y, 'template', { "template": 'Write your template' }, template);
+                    break;
+            
+
+                    case 'Speech_recognition':
+                    var Speech_recognition = `
+            <div>
+              <div class="title-box"><i class="fas fa-code"></i>ASR_pub</div>
+              <div class="box">
+                Ger Vars
+                <textarea df-template></textarea>
+                Output template with vars
+              </div>
+            </div>
+            `;
+                    editor.addNode('Speech_recognition', 0, 1, pos_x, pos_y, 'Speech_recognition', { "Speech_recognition": 'Write your template' },Speech_recognition);
+                    break;
+
+
+
+            case 'sub_node':
+                    var sub_node = `
+            <div>
+              <div class="title-box"><i class="fas fa-code"></i>create_sub</div>
+              <div class="box">
+                Ger Vars
+                <textarea df-template></textarea>
+                Output template with vars
+              </div>
+            </div>
+            `;
+
+                    editor.addNode('sub_node', 1, 1, pos_x, pos_y, 'sub_node', { "sub_node": 'Write your template' }, sub_node);
+                    break;
+
+
+                case 'multiple':
+                    var multiple = `
+            <div>
+              <div class="box">
+                Multiple node logic
+              </div>
+            </div>
+            `;
+
+
+
+                    editor.addNode('multiple', 10, 10, pos_x, pos_y, 'multiple', {}, multiple);
+                    break;
+                case 'personalized':
+                    var personalized = `
+            <div>
+              Personalized
+            </div>
+            `;
+                    editor.addNode('personalized', 1, 1, pos_x, pos_y, 'personalized', {}, personalized);
+                    break;
+                case 'dbclick':
+                    var dbclick = `
+            <div>
+            <div class="title-box"><i class="fas fa-mouse"></i> Db Click</div>
+              <div class="box dbclickbox" ondblclick="showpopup(event)">
+                Db Click here
+                <div class="modal" style="display:none">
+                  <div class="modal-content">
+                    <span class="close" onclick="closemodal(event)">&times;</span>
+                    Change your variable {name} !
+                    <input type="text" df-name>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            `;
+                    editor.addNode('dbclick', 1, 1, pos_x, pos_y, 'dbclick', { name: '' }, dbclick);
+                    break;
+
+                default:
+            }
+        }
+
+        var transform = '';
+        function showpopup(e) {
+            e.target.closest(".drawflow-node").style.zIndex = "9999";
+            e.target.children[0].style.display = "block";
+            //document.getElementById("modalfix").style.display = "block";
+
+            //e.target.children[0].style.transform = 'translate('+translate.x+'px, '+translate.y+'px)';
+            transform = editor.precanvas.style.transform;
+            editor.precanvas.style.transform = '';
+            editor.precanvas.style.left = editor.canvas_x + 'px';
+            editor.precanvas.style.top = editor.canvas_y + 'px';
+            console.log(transform);
+
+            //e.target.children[0].style.top  =  -editor.canvas_y - editor.container.offsetTop +'px';
+            //e.target.children[0].style.left  =  -editor.canvas_x  - editor.container.offsetLeft +'px';
+            editor.editor_mode = "fixed";
+
+        }
+
+        function closemodal(e) {
+            e.target.closest(".drawflow-node").style.zIndex = "2";
+            e.target.parentElement.parentElement.style.display = "none";
+            //document.getElementById("modalfix").style.display = "none";
+            editor.precanvas.style.transform = transform;
+            editor.precanvas.style.left = '0px';
+            editor.precanvas.style.top = '0px';
+            editor.editor_mode = "edit";
+        }
+
+        function changeModule(event) {
+            var all = document.querySelectorAll(".menu ul li");
+            for (var i = 0; i < all.length; i++) {
+                all[i].classList.remove('selected');
+            }
+            event.target.classList.add('selected');
+        }
+
+        function changeMode(option) {
+
+            //console.log(lock.id);
+            if (option == 'lock') {
+                lock.style.display = 'none';
+                unlock.style.display = 'block';
+            } else {
+                lock.style.display = 'block';
+                unlock.style.display = 'none';
+            }
+
+        }
+        function update() {
+				var select = document.getElementById('language');
+				var option = select.options[select.selectedIndex];
+                console.log(option.text); // Getting the function to console log and append into the list of json code generator
+
+        }
+        function nlplang() {
+				var select = document.getElementById('language');
+				var option = select.options[select.selectedIndex];
+                console.log(option.text); // Getting the function to console log and append into the list of json code generator
+
+        }
+        function checkButton() {    
+            var getSelectedValue = document.querySelector(   
+                'input[name="season"]:checked');   
+                
+            if(getSelectedValue != null) {   
+                document.getElementById("disp").innerHTML   
+                    = getSelectedValue.value   
+                    + " season is selected";   
+                console.log(getSelectedValue.value);
+            }   
+            else {   
+                document.getElementById("error").innerHTML   
+                    = "*You have not selected any season";   
+            }   
+        }    
+
+    </script>
+</body>
+
+</html>
